@@ -23,14 +23,21 @@ Kompositor::~Kompositor()
 {
     delete ui;
 }
+void Kompositor::on_pushButton_clicked()
+{
+    //synth.spela(3, 500, 100);
+    for(int i =0; i<notblad.getNotes().size(); i++) {
+        Not* temp = notblad.getNotes()[i];
+        synth.spela(temp->getHeight(),temp->getLength(), 100);
+    }
+}
+
 void Kompositor::on_n_half_clicked()
 {
     nottypval = 1000;
 }
 void Kompositor::on_n_quater_clicked()
 {
-    //spara värde i nottypval
-    //siffran är vilken Not du väljer
     nottypval = 500;
 }
 void Kompositor::on_n_eight_clicked()
@@ -59,7 +66,7 @@ void Kompositor::mousePressEvent(QMouseEvent *e)
 
         ritaOm();
     }
-    update();
+
 }
 
 void Kompositor::ritaOm()
@@ -81,18 +88,6 @@ int Kompositor::pixelToHojd(int ypixel)
 }
 
 
-Kompositor::Kompositor(QWidget *parent) : QMainWindow(parent)
-{
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    timer->start(10);
-}
-
-void Kompositor::update()
-{
-    //updt noterna?
-    repaint();
-}
 
 void Kompositor::paintEvent(QPaintEvent *e)
 {
@@ -100,48 +95,19 @@ void Kompositor::paintEvent(QPaintEvent *e)
 
     for(int i =0; i<notblad.getNotes().size(); i++) {
         Not* temp = notblad.getNotes()[i];
-        temp->ritaNot(&painter, _x); //detta ska vara efter alla ifsatser?
-        _x += 40; //TODO Behövs _x argumentet? vill inte ha så
+        _x += 40; //TODO vill inte ha så
 
-        //TODO _langd eller nottypval?
         if(nottypval == 1000) {
             if(temp->getHeight() == 0){
-                QPixmap halfpixc("G:/OOP/Lab7/halfc.png");
-                temp->pixmap(halfpixc);
+                temp->ritaNot(&painter, _x, 0.5);
             }
             else {
-                QPixmap halfpix("G:/OOP/Lab7/half.png");
-                temp->pixmap(halfpix);
+                temp->ritaNot(&painter, _x, 1.5);
             }
         }
-
-        if(nottypval == 500) {
-            if(temp->getHeight() == 0){
-                QPixmap halfpixc("G:/OOP/Lab7/quaterc.png");
-                temp->pixmap(halfpixc);
-            }
-            else {
-                QPixmap halfpix("G:/OOP/Lab7/quater.png");
-                temp->pixmap(halfpix);
-            }
-        }
-
-        if(nottypval == 250) {
-            if(temp->getHeight() == 0){
-                QPixmap halfpixc("G:/OOP/Lab7/eightc.png");
-                temp->pixmap(halfpixc);
-            }
-            else {
-                QPixmap halfpix("G:/OOP/Lab7/eight.png");
-                temp->pixmap(halfpix);
-            }
-        }
-
-
-
-
     }
 }
+
 
 
 
